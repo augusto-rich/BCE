@@ -395,23 +395,18 @@ indice_adequacao <- dcast(prop_pop_cat, #trnasformar de long para wide
                           value.var = "Prop") %>%
   mutate(Indice_Adequacao = 100*(`Categoria 1 ou Adequada (C1)` + 
            `Categoria 2 ou Intermediária (C2)`/2 -
-           `Categoria 3 ou Inadequada (C3)`))
+           `Categoria 3 ou Inadequada (C3)`),
+         Minas_Categoria = case_when(
+           Indice_Adequacao > 70 ~ "Minas 1",
+           Indice_Adequacao > 50 & Indice_Adequacao <= 70 ~ "Minas 2",
+           Indice_Adequacao >= 20 & Indice_Adequacao <= 50 ~ "Minas 3",
+           Indice_Adequacao < 20 ~ "Minas 4"
+         ))
   
 
 write.csv2(indice_adequacao, file="indice_adequacao.csv")
 
-#TAREFA
-#ANEXAR COLUNAS COM CATEGORIAS DE MINAS 1, MINAS 2, MINAS 3 E MINAS 4
-
-indice_adequacao <- indice_adequacao %>%
-  mutate(Minas_Categoria = case_when(
-      Indice_Adequacao > 70 ~ "Minas 1",
-      Indice_Adequacao >= 50.1 & Indice_Adequacao <= 70 ~ "Minas 2",
-      Indice_Adequacao >= 20 & Indice_Adequacao <= 50 ~ "Minas 3",
-      Indice_Adequacao < 20 ~ "Minas 4"
-))
-
-
+rm(list = ls(pattern = "adeq_"))
 ##########---------------- MAPAS
 ########
 ##
@@ -423,7 +418,7 @@ if(!require(ggplot2)){ install.packages("ggplot2"); require(ggplot2)}
 if(!require(sf)){ install.packages("sf"); require(sf)}
 if(!require(dplyr)){ install.packages("dplyr"); require(dplyr)}
 if(!require(ggsn)){ install.packages("ggsn"); require(ggsn)} #pra add bússula
-if(!require(dichromat)){ install.packages("dichromat"); require(dplyr)}
+if(!require(viridis)){ install.packages("viridis")}; require(viridis)
 
 microMG_map <- read_micro_region(code_micro=31, year=2013, 
                                  simplified=FALSE, showProgress = TRUE) #vem do 'geobr'
@@ -502,3 +497,15 @@ ggplot() +
           color=grey(0.5), size=0.01) +
   ggtitle('IA 2015_2017')
 ggsave('map_IA2015_2017.png',device='png',width=6,height=6)
+
+#CATEGORIA MINAS
+microMG_map_cat_minas <- microMG_map %>%
+  filter(Trienio=='2000_2002')
+
+ggplot() +
+  geom_sf(data=microMG_map_cat_minas, mapping=aes(fill=Minas_Categoria),
+          color=grey(0.5), size=0.01) +
+  scale_fill_grey(start = 1, end = 0) +
+  ggtitle('Categoria_Minas_2000_2002')
+ggsave('map_CatMinas2000_2002.png',device='png',width=6,height=6)
+
