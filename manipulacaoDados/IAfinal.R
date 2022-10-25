@@ -423,6 +423,7 @@ if(!require(ggplot2)){ install.packages("ggplot2"); require(ggplot2)}
 if(!require(sf)){ install.packages("sf"); require(sf)}
 if(!require(dplyr)){ install.packages("dplyr"); require(dplyr)}
 if(!require(ggsn)){ install.packages("ggsn"); require(ggsn)} #pra add bússula
+if(!require(dichromat)){ install.packages("dichromat"); require(dplyr)}
 
 microMG_map <- read_micro_region(code_micro=31, year=2013, 
                                  simplified=FALSE, showProgress = TRUE) #vem do 'geobr'
@@ -441,7 +442,7 @@ microMG_map <- merge(x = microMG_map, y = indice_adequacao,
 head(microMG_map)
 
 #
-## Map of IA 2002_2002
+## Map of IA 2000_2002
 names(microMG_map)
 microMG_map_2000_2002 <- microMG_map %>%
   filter(Trienio=='2000_2002')
@@ -452,3 +453,52 @@ ggplot() +
   ggtitle('IA 2000_2002')
 ggsave('map_IA2000_2002.png',device='png',width=6,height=6)
 
+#IA 2003_2005
+microMG_map_2003_2005 <- microMG_map %>%
+  filter(Trienio=='2003_2005')
+
+ggplot() +
+  geom_sf(data=microMG_map_2003_2005, mapping=aes(fill=Indice_Adequacao),
+          color=grey(0.5), size=0.01) +
+    ggtitle('IA 2003_2005')
+ggsave('map_IA2003_2005.png',device='png',width=6,height=6)
+
+#IA 2006_2008
+microMG_map_2006_2008 <- microMG_map %>%
+  filter(Trienio=='2006_2008')
+
+ggplot() +
+  geom_sf(data=microMG_map_2006_2008, mapping=aes(fill=Indice_Adequacao),
+          color=grey(0.5), size=0.01) +
+  ggtitle('IA 2006_2008')
+ggsave('map_IA2006_2008.png',device='png',width=6,height=6)
+
+#IA 2009_2011
+microMG_map_2009_2011 <- microMG_map %>%
+  filter(Trienio=='2003_2005')
+
+ggplot() +
+  geom_sf(data=microMG_map_2009_2011, mapping=aes(fill=Indice_Adequacao),
+          color=grey(0.5), size=0.01) +
+  ggtitle('IA 2009_2011')
+ggsave('map_IA2009_2011.png',device='png',width=6,height=6)
+
+#IA 2012_2014
+microMG_map_2012_2014 <- microMG_map %>%
+  filter(Trienio=='2012_2014')
+
+ggplot() +
+  geom_sf(data=microMG_map_2012_2014, mapping=aes(fill=Indice_Adequacao),
+          color=grey(0.5), size=0.01) +
+  ggtitle('IA 2012_2014')
+ggsave('map_IA2012_2014.png',device='png',width=6,height=6)
+
+#IA 2015_2017
+microMG_map_2015_2017 <- microMG_map %>%
+  filter(Trienio=='2015_2017')
+
+ggplot() +
+  geom_sf(data=microMG_map_2015_2017, mapping=aes(fill=Indice_Adequacao),
+          color=grey(0.5), size=0.01) +
+  ggtitle('IA 2015_2017')
+ggsave('map_IA2015_2017.png',device='png',width=6,height=6)
